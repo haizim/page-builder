@@ -422,3 +422,20 @@ function cekLocal(){
 		itemCont = JSON.parse(localStorage.getItem("itemCont"));
 	}
 }
+
+function downHasil() {
+	render();
+
+	const kode = document.getElementById("kode").value;
+
+	let element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(kode));
+	element.setAttribute('download', "hasil.html");
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+}
