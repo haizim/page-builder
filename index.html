@@ -1,0 +1,434 @@
+<html>
+<head>
+<title>Simple Page Builder</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="summernote/summernote-bs4.js"></script>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+	scroll-behavior: smooth;
+	max-width: 100vw; 
+	overflow-x: hidden; 
+	min-height: 100vh
+}
+img,video,iframe,audio{
+	width: 100%;
+}
+h1,h2,h3,h4,h5,h6{
+	font-weight: bold;
+}
+
+.row{
+	margin: unset;
+}
+.preview{
+	box-shadow: 0.5em 0.5em 0.5em rgba(0,0,0,0.25);
+	background-color: #fff;
+}
+.baris{
+	padding: 0 10%;
+	transition: all 1s;
+}
+.baris:hover{
+	background-color: #007bff25;	
+}
+/*.baris:hover .tambah{
+	display: block;
+	color: #007bff;
+}*/
+
+.kolom{
+	padding: 1em;
+	transition: all 1s;
+}
+.kolom:hover{
+	background-color: #007bff25;
+}
+/*.kolom:hover .tambah{
+	display: block;
+	color: #007bff;
+}*/
+
+.tambah{
+	cursor: pointer;
+	font-weight: bold; 
+	text-align: center;
+	padding:.5em;
+	border-radius: 1em;
+	color: #ffc107;
+	background-color: #ffc10758;
+	backdrop-filter: blur(5px);
+	width: fit-content;
+	transition: all .5s;
+	/*display: none;*/
+}
+.tambah-ico{
+	transition: all .5s;
+}
+.tambah-ico:hover{
+	color: #007bff;
+}		
+.item{
+	padding: .5em;
+	margin: .5em;
+	border-radius: .5em;
+	transition: all 1s;
+}
+.item:hover{
+	background-color: #007bff25;
+}
+.item .tambah{
+	display: none;
+}
+.item:hover .tambah{
+	display: block;
+	color: #007bff;
+}
+.edit{
+	padding: 1em .5em; 
+}
+.hasil{
+	visibility: collapse;
+}
+.kontener{
+	background-color: #eee; 
+	padding: 1em 5em;
+}
+.baris-full{
+	padding: 0;
+}
+.baris-fullh{
+	height: 100vh;
+}
+
+.ico{
+	padding: 5px;
+}
+
+.ikon input{
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+.ikon input:checked + .fab{
+	background-color: #858585;
+}
+.ikon input:checked + .fa{
+	background-color: #858585;
+}
+.ikon .fa, .ikon .fab{
+	padding: 5px;
+}
+.icon-cont,#ico{
+	height: 58vh;
+    overflow-y: scroll;
+    border : 1px solid #252858;
+    border-radius: .25em;
+}
+</style>
+</head>
+<body>
+<br><br>
+<center><h2>Simple Page Builder</h2></center>
+<hr>
+<div class="kontener">
+<!--h4>Preview</h4-->
+<div class="preview" id="preview"></div>
+<hr>
+<center>
+	<button class='btn btn-primary' onclick="addRow()">Tambah Baris</button> 
+	<button class='btn btn-warning' onclick="delAll()">Hapus Semua</button> 
+	<hr>
+	<button class='btn btn-primary' onclick="prevHasil()">Preview Hasil</button>
+	<button class='btn btn-warning' onclick="render()">Render Kode</button>
+	<hr>
+	<textarea class="form-control" rows="5" id="kode" placeholder="Kode akan ditampilkan disini"></textarea>
+</center>
+</div>
+
+<div class="hasil" id="hasil"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-edit" role="dialog">
+	<div class="modal-dialog modal-lg">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Edit Item</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<input type='hidden' id='edit-item'>
+				<div id='summernote'></div><br>
+				<b>Tambahkan : </b>
+				<div class="btn-group">
+					<button class="btn btn-primary" onclick="addBtn()">Tombol</button> 
+					<button class="btn btn-warning" onclick="addIkon()">Ikon</button>
+					<button class="btn btn-primary" onclick="addGImg()">Gambar GDrive</button> 
+					<button class="btn btn-warning" onclick="addGVid()">Video GDrive</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyText()' data-dismiss="modal">Terapkan</button>
+				<button class='btn btn-warning' onclick='delItem()' data-dismiss="modal">Hapus</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div class="modal fade" id="modal-kolom" role="dialog">
+	<div class="modal-dialog modal-lg">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Edit Kolom</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<input type='hidden' id='edit-col' value="">
+				
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Background Color</span>
+					</div> 
+					<input type="color" class="form-control" id="color-col">
+					
+				</div>  
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Background Image</span>
+					</div>
+					<input type="text" class="form-control" placeholder="URL" id="url-col">
+				</div>
+				<input type="checkbox" id="fix-col" name="fix-col">
+				<label for="fix-col">Fixed background</label>
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyCol()' data-dismiss="modal">Terapkan</button>
+				<button class='btn btn-primary' onclick='resetCol()' data-dismiss="modal">Reset</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div class="modal fade" id="modal-baris" role="dialog">
+	<div class="modal-dialog modal-lg">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Edit Baris</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<input type='hidden' id='edit-row' value="">
+				
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Background Color</span>
+					</div> 
+					<input type="color" class="form-control" id="color-row">
+					
+				</div>  
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Background Image</span>
+					</div>
+					<input type="text" class="form-control" placeholder="URL" id="url-row">
+				</div>
+				<div class="row">
+					<div class="col">
+						<input type="checkbox" id="fix-row" name="fix-row">
+						<label for="fix-row">Fixed background</label>
+					</div>
+					<div class="col">
+						<input type="checkbox" id="full-row" name="full-row">
+						<label for="full-row">Full Width</label>
+					</div>
+					<div class="col">
+						<input type="checkbox" id="fullh-row" name="fullh-row">
+						<label for="fullh-row">Full height</label>
+					</div>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyRow()' data-dismiss="modal">Terapkan</button>
+				<button class='btn btn-primary' onclick='resetRow()' data-dismiss="modal">Reset</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div class="modal fade" id="modal-btn" role="dialog">
+	<div class="modal-dialog">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Tambahkan Tombol</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Caption</span>
+					</div> 
+					<input type="text" class="form-control" name="btn-txt" id="btn-txt">
+				</div>  
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">URL</span>
+					</div> 
+					<input type="text" class="form-control" name="btn-url" id="btn-url">
+				</div>
+				Warna : 
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Background</span>
+					</div> 
+					<input type="color" class="form-control" id="btn-bg">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Teks</span>
+					</div> 
+					<input type="color" class="form-control" id="btn-color">
+					
+				</div>    
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyBtn()' data-dismiss="modal">Tambahkan</button>
+				
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal-ikon" role="dialog">
+	<div class="modal-dialog modal-lg">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Tambah Ikon</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+
+				<div id="ico" class="row icon-cont"></div>
+				ukuran : 
+				<select id="size-ico" name="size-ico" class="custom-select">
+					<option value="" selected>Normal</option>
+					<option value="fa-xs">Sangat Kecil</option>
+					<option value="fa-sm">Kecil</option>
+					<option value="fa-lg">Besar</option>
+					<option value="fa-2x">2x</option>
+					<option value="fa-3x">3X</option>
+					<option value="fa-5x">5x</option>
+					<option value="fa-7x">7x</option>
+					<option value="fa-10x">10x</option>
+				</select>
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyIkon()' data-dismiss="modal">Terapkan</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div class="modal fade" id="modal-gimg" role="dialog">
+	<div class="modal-dialog">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Tambah Gambar GDrive</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body" style="overflow-wrap: anywhere;">
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">URL Sharing</span>
+					</div>
+					<input type="text" class="form-control" placeholder="URL File Gambar GDrive" id="url-gimg">
+				</div>
+				Contoh : https://drive.google.com/file/d/0B5MGbLMAkw2xc1VoVE9DTXpfZVU/view?usp=sharing<br>
+				Pastikan aksesnya dapat dilihat oleh siapapun 
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyGImg()' data-dismiss="modal">Terapkan</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div class="modal fade" id="modal-gvid" role="dialog">
+	<div class="modal-dialog ">
+    
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Tambah Video GDrive</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body" style="overflow-wrap: anywhere;">
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text">URL Sharing</span>
+					</div>
+					<input type="text" class="form-control" placeholder="URL File Video GDrive" id="url-gvid">
+				</div>
+				Contoh : https://drive.google.com/file/d/0B5MGbLMAkw2xbFY1YWYtUWc0MFE/view?usp=sharing<br>
+				Pastikan aksesnya dapat dilihat oleh siapapun 
+
+			</div>
+			<div class="modal-footer">
+				<button class='btn btn-primary' onclick='applyGVid()' data-dismiss="modal">Terapkan</button>
+				<!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+			</div>
+		</div>
+      
+	</div>
+</div>
+
+<div style='width:100vw; background-color: #252525; color:#fff; padding: 1em; bottom : 0;'><center>Hasil keisengan <a href='https://haizim.one/'>Haizim</a></center></div>
+
+<script src="script.js"></script>
+</body>
+</html>
