@@ -24,15 +24,6 @@ $.ajax({type:"GET",url:"solid+reg.txt",success:function(data){
 }
 });
 
-function ikon() {
-	const iko = document.getElementsByName("ico");
-	[...iko].forEach(e => isChecked(e.id));
-}
-
-function isChecked(ikn) {
-	if(document.getElementById(ikn).checked){icon=ikn.replace("ico-","")}; 
-}
-
 sumnot();
 cekLocal();
 
@@ -237,6 +228,16 @@ function applyBtn() {
 
 ////// ikon mulai ////////
 
+function ikon() {
+	const iko = document.getElementsByName("ico");
+	[...iko].forEach(e => isChecked(e.id));
+}
+
+function isChecked(ikn) {
+	let ikos = document.getElementById(ikn);
+	if(ikos.checked){ icon = ikos.nextElementSibling.className };
+}
+
 function addIkon() {
 	const iko = document.getElementsByName("ico");
 	[...iko].forEach(e => e.checked="false");
@@ -248,7 +249,7 @@ function applyIkon() {
 	ikon();
 	const skr = $('#summernote').summernote('code');
 	const ikonSize = document.getElementById('size-ico').value;
-	let ikonAdd = " . <i class='fab fa-"+icon+" "+ikonSize+"'></i> . ";
+	let ikonAdd = " . <i class='"+icon+" "+ikonSize+"'></i> . ";
 	$('#summernote').summernote('code',skr+ikonAdd);
 }
 ///// ikon selesai //////
